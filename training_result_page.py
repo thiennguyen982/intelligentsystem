@@ -34,27 +34,8 @@ def training_result_page():
         unsafe_allow_html=True,
     )
 
-    # Data for precision and recall trends from Jan to Nov
-    data = {
-        "Month": [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-        ],
-        "Precision": [0.85, 0.88, 0.87, 0.89, 0.86, 0.84, 0.88, 0.87, 0.86, 0.89, 0.90],
-        "Recall": [0.80, 0.82, 0.81, 0.85, 0.84, 0.83, 0.85, 0.86, 0.84, 0.87, 0.80],
-    }
-
     # Create a DataFrame
-    df = pd.DataFrame(data)
+    df = pd.read_csv("./data/training_result/precision_recall_report.csv")
 
     # Calculate F1 Score for each month
     df["F1 Score"] = (

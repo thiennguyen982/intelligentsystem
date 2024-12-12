@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 
@@ -156,24 +157,7 @@ def reported_page():
         unsafe_allow_html=True,
     )
 
-    months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ]
-
-    # Fluctuated data for actual and predicted continued customers
-    actual_customers = [780, 810, 835, 870, 850, 890, 860, 920, 905, 870, 940]
-    predicted_customers = [800, 820, 850, 880, 840, 900, 880, 910, 890, 880, 950, 920]
+    customer = pd.read_csv("./data/reported_page_data/customer.csv")
 
     # Create the figure for the line chart
     line_fig = go.Figure()
@@ -181,8 +165,8 @@ def reported_page():
     # Add line for actual continued customers
     line_fig.add_trace(
         go.Scatter(
-            x=months,
-            y=actual_customers,
+            x=customer["Month"],
+            y=customer["Actual_Customers"],
             mode="lines+markers",
             name="Actual Continued Customers",
             line=dict(color="#28a745", width=3),
@@ -193,8 +177,8 @@ def reported_page():
     # Add line for predicted continued customers
     line_fig.add_trace(
         go.Scatter(
-            x=months,
-            y=predicted_customers,
+            x=customer["Month"],
+            y=customer["Predicted_Customers"],
             mode="lines+markers",
             name="Predicted Continued Customers",
             line=dict(color="#ff7f0e", width=3),
@@ -217,9 +201,9 @@ def reported_page():
 
     st.markdown("<br><br>", unsafe_allow_html=True)
 
-    # Fluctuated data for customer counts
-    continue_customers = [780, 810, 835, 870, 850, 890, 860, 920, 905, 870, 940, 910]
-    stop_customers = [220, 190, 165, 130, 150, 110, 140, 80, 95, 130, 60, 90]
+    customer_count = pd.read_csv("./data/reported_page_data/customer_counts.csv")
+    continue_customers = customer_count["Continue_Customers"]
+    stop_customers = customer_count["Stop_Customers"]
 
     # Calculate total customers and percentage for each category
     total_customers = [c + s for c, s in zip(continue_customers, stop_customers)]
@@ -237,7 +221,7 @@ def reported_page():
     # Add bar for continued customers
     stacked_fig.add_trace(
         go.Bar(
-            x=months,
+            x=customer["Month"],
             y=continue_percent,
             name="Continued (%)",
             marker=dict(color="#28a745"),
@@ -247,7 +231,7 @@ def reported_page():
     # Add bar for stopped customers
     stacked_fig.add_trace(
         go.Bar(
-            x=months,
+            x=customer["Month"],
             y=stop_percent,
             name="Stopped (%)",
             marker=dict(color="#ff6b6b"),
@@ -282,10 +266,12 @@ def reported_page():
         unsafe_allow_html=True,
     )
 
+    service_type = pd.read_csv("./data/reported_page_data/internet_service_type.csv")
+
     # Fluctuated data for each Internet Service type
-    dsl_retention = [65, 68, 70, 72, 75, 73, 74, 76, 78, 80, 77, 79]
-    fiber_retention = [85, 87, 88, 89, 90, 91, 92, 93, 94, 92, 93, 95]
-    no_service_retention = [40, 42, 43, 41, 39, 38, 37, 36, 35, 34, 33, 32]
+    dsl_retention = service_type["DSL_Retention"]
+    fiber_retention = service_type["Fiber_Retention"]
+    no_service_retention = service_type["No_Service_Retention"]
 
     # Create the line chart figure
     service_line_fig = go.Figure()
@@ -293,7 +279,7 @@ def reported_page():
     # Add line for DSL retention
     service_line_fig.add_trace(
         go.Scatter(
-            x=months,
+            x=customer["Month"],
             y=dsl_retention,
             mode="lines+markers",
             name="DSL Retention",
@@ -305,7 +291,7 @@ def reported_page():
     # Add line for Fiber Optic retention
     service_line_fig.add_trace(
         go.Scatter(
-            x=months,
+            x=customer["Month"],
             y=fiber_retention,
             mode="lines+markers",
             name="Fiber Optic Retention",
@@ -317,7 +303,7 @@ def reported_page():
     # Add line for No Service retention
     service_line_fig.add_trace(
         go.Scatter(
-            x=months,
+            x=customer["Month"],
             y=no_service_retention,
             mode="lines+markers",
             name="No Service Retention",
@@ -367,7 +353,7 @@ def reported_page():
     # Add bar for DSL retention
     stacked_bar_fig.add_trace(
         go.Bar(
-            x=months,
+            x=customer["Month"],
             y=dsl_percent,
             name="DSL",
             marker=dict(color="#1f77b4"),
@@ -377,7 +363,7 @@ def reported_page():
     # Add bar for Fiber Optic retention
     stacked_bar_fig.add_trace(
         go.Bar(
-            x=months,
+            x=customer["Month"],
             y=fiber_percent,
             name="Fiber Optic",
             marker=dict(color="#2ca02c"),
@@ -387,7 +373,7 @@ def reported_page():
     # Add bar for No Service retention
     stacked_bar_fig.add_trace(
         go.Bar(
-            x=months,
+            x=customer["Month"],
             y=no_service_percent,
             name="No Service",
             marker=dict(color="#d62728"),
